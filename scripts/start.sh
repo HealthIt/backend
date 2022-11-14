@@ -23,12 +23,11 @@ fi
 
 # 애플리케이션 실행
 echo "$TIME_NOW > $JAR_FILE 에 실행권한 추가" >> $DEPLOY_LOG
-
 chmod +x "$JAR_FILE"
 
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
-
-nohup java -jar -Duser.timezone=Asia/Seoul "$JAR_FILE" > $APP_LOG 2> ERROR_LOG &
+nohup java -jar "$JAR_FILE" \
+ > $APP_LOG 2> $ERROR_LOG &
 
 CURRENT_PID=$(pgrep -f "$JAR_FILE")
 echo "$TIME_NOW > 프로세스 아이디: $CURRENT_PID" >> $DEPLOY_LOG
