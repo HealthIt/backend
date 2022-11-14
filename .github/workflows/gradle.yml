@@ -24,10 +24,9 @@ env:
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: healthit-server-codeDeploy-group
 
 jobs:
-  deploy:
+  build:
     name: Deploy
     runs-on: ubuntu-20.04
-    environment: production
 
     steps:
     - name: Checkout
@@ -44,8 +43,9 @@ jobs:
       shell: bash
 
     - name: Build with Gradle
-      run: ./gradlew build
-      shell: bash
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      with:
+        arguments: build
 
     - name: Make Directory
       run: mkdir -p deploy
@@ -70,15 +70,8 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Upload to AWS S3
-      run: aws s3 cp --region ${{ env.AWS_REGION }} ./${{ env.BUCKET_ZIP_NAME }}.zip s3://${{ env.S3_BUCKET_NAME }}/
+    - name: Upload to S3
+      run: aws s3 cp --region ${{ env.AWS_REGION }} ./${{ env.BUCKET_ZIP_NAME }}.zip s3://$S3_BUCKET_NAME/
 
     - name: Deploy
-      run: |
-        aws deploy create-deployment \
-          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-          --deployment-config-name CodeDeployDefault.OneAtATime \
-          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,key=${{ env.BUCKET_ZIP_NAME }}.zip \ 
-          --region ${{ env.AWS_REGION }}
+      run: aws deploy create-deployment --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} --file-exists-behavior OVERWRITE --s3-location bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,key=${{ env.BUCKET_ZIP_NAME }}.zip --region ${{ env.AWS_REGION }}
