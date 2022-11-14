@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 env:
-  AWS_REGION: ${{ env.AWS_REGION }}
+  AWS_REGION: ap-northeast-2
   BUCKET_ZIP_NAME: healthit
   S3_BUCKET_NAME: healthit-server-bucket
   CODE_DEPLOY_APPLICATION_NAME: healthit-server
