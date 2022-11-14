@@ -53,8 +53,14 @@ jobs:
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy
 
+    - name: Copy appspec.yml
+      run: cp appspec.yml ./deploy
+
+    - name: Copy script
+      run: cp ./scripts/*.sh ./deploy
+
     - name: Make zip file
-      run: zip -r ./${{ env.S3_BUCKET_NAME }}.zip ./deploy
+      run: zip -r ./${{ env.BUCKET_ZIP_NAME }}.zip ./deploy
       shell: bash
 
     - name: Configure AWS credentials
@@ -71,6 +77,7 @@ jobs:
       run: |
         aws deploy create-deployment \
           --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
           --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,key=${{ env.BUCKET_ZIP_NAME }}.zip \ 
