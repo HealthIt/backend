@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Health It</title>
+    <style>
+        .food > label {
+            display: inline-block;
+            width: 100px;
+            margin: 5px;
+        }
+
+        .food > input, textarea {
+            width: 200px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="food">
+    <h3>음식</h3>
+    <br>
+
+    <label for="foodNm">음식명</label>
+    <input type="text" id="foodNm" placeholder="음식명">
+    <br>
+
+    <label for="foodDesc">음식소개</label>
+    <textarea id="foodDesc" placeholder="음식소개"></textarea>
+
+    <div class="food">
+        <label for="calorie">칼로리</label>
+        <input type="text" id="calorie" placeholder="칼로리">
+
+        <label for="protein">단백질</label>
+        <input type="text" id="protein" placeholder="단백질">
+
+        <label for="carbs">탄수화물</label>
+        <input type="text" id="carbs" placeholder="탄수화물">
+
+        <label for="fat">지방</label>
+        <input type="text" id="fat" placeholder="지방">
+    </div>
+
+    <label for="img" accept="image/*">음식 이미지</label>
+    <input type="file" id="img" onchange="imgUpload()">
+</div>
+
+<div class="irdnt">
+    <h3>식재료</h3>
+    <br>
+
+    <div style="display: flex;">
+        <label style="margin: 5px; min-width: 50px;">재료</label>
+        <button onclick="addIrdnt()" style="margin: 5px; width: 30px; height: 21px;">+</button>
+        <div id="irdnts">
+        </div>
+    </div>
+</div>
+
+<button onclick="initData()">초기화</button>
+<button onclick="saveData()">저장</button>
+</body>
+<script>
+    /**
+     * 이미지 파일 데이터 변환
+     * file -> DataUrl
+     */
+    function imgUpload() {
+        let file = document.querySelector("#img").files[0];
+
+        if (imgValid(file.name)) {
+            let reader = new FileReader();
+
+            reader.onload = () => {
+                file.dataUrl = reader.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+
+    /**
+     * 이미지 파일 유효성 검사
+     * @param filename 확장자 표함 파일명
+     * @returns {boolean} 이미지 파일 여부
+     *                    - true: 이미지 파일
+     */
+    const checkFileType = ["jpg", "gif", "png", "jpeg", "bmp", "tif"];
+    function imgValid(filename) {
+        const fileType = filename.split(".")[1].toLowerCase();
+
+        if (checkFileType.indexOf(fileType) === -1) {
+            alert("이미지 형식의 파일만 첨부 가능합니다.");
+            document.getElementById("img").value = "";    //초기화를 위한 추가 코드
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 식재료 항목 추가
+     */
+    function addIrdnt() {
+        let el = document.createElement("input");
+        el.setAttribute("style", "width: 200px; margin: 5px;")
+        el.setAttribute("tpye", "text");
+        el.setAttribute("name", "irdntNm");
+        el.setAttribute("placeholder", "재료")
+
+        document.getElementById("irdnts").append(el);
+    }
+
+    /**
+     * 저장데이터 반환
+     */
+    function getData() {
+        let irdntNms = [];
+
+        document.getElementsByName("irdntNm").forEach(e => {
+            irdntNms.push(e.value);
+        })
+
+        const file = document.getElementById("img").files[0];
+
+        return {
+            foodNm  : document.getElementById("foodNm").value,           // 음식명
+            foodDesc: document.getElementById("foodDesc").value,             // 음식 소개
+            calorie : document.getElementById("calorie").value,          // 칼로리
+            protein : document.getElementById("protein").value,          // 단백질
+            carbs   : document.getElementById("carbs").value,            // 탄수화물
+            fat     : document.getElementById("fat").value,              // 지방
+            img     : file !== undefined ? file.dataUrl : null,          // 음식 사진
+            irdnts  : irdntNms                                           // 식재료 목록
+        };
+    }
+
+    /**
+     * 데이터 저장
+     */
+    function saveData() {
+        $.ajax({
+            type       : "POST",
+            url        : "/foods/new",
+            data       : JSON.stringify(getData()),
+            contentType: "application/json;charset=utf-8;",
+            dataType   : "json",
+            complete   : data => {
+                if (data.status === 201) {
+                    initData()
+                } else if (data.status === 400) {
+                    console.log(data.responseJSON);
+                    alert("저장에 실패했습니다.");
+                } else {
+                    alert("[" + data.status + "] 오류입니다.")
+                }
+            }
+        });
+    }
+
+    /**
+     * 데이터 초기화
+     */
+    function initData() {
+        document.getElementById("foodNm").value = "";
+        document.getElementById("foodDesc").value = "";
+        document.getElementById("calorie").value = "";
+        document.getElementById("protein").value = "";
+        document.getElementById("carbs").value = "";
+        document.getElementById("fat").value = "";
+        document.getElementById("img").value = "";
+        document.getElementById("irdnts").innerText = ""
+    }
+</script>
+</html>
