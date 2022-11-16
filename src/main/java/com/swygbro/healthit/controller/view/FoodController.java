@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class FoodController {
 
+    /**
+     * 음식 저장 View 호출
+     * @return Url
+     */
     @GetMapping("/food/new")
     public String createFrom() {
         return "food/createFoodForm";
