@@ -3,6 +3,7 @@ package com.swygbro.healthit.controller;
 import com.swygbro.healthit.controller.dto.BmiRequestDto;
 import com.swygbro.healthit.controller.dto.BmiResultFoodDto;
 import com.swygbro.healthit.controller.dto.FoodSaveDto;
+import com.swygbro.healthit.controller.dto.ResponseDto;
 import com.swygbro.healthit.food.service.FoodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -42,9 +44,9 @@ public class FoodApiController {
      * @return 음식 목록
      */
     @GetMapping("/v1/bmi")
-    public ResponseEntity<List<BmiResultFoodDto>> findFoodByBmi(@ModelAttribute @Validated BmiRequestDto dto) {
+    public ResponseEntity<ResponseDto<List<BmiResultFoodDto>>> findFoodByBmi(@ModelAttribute @Valid BmiRequestDto dto) {
         List<BmiResultFoodDto> result = foodService.findFoodByBmi(dto);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ResponseDto.of("BMI [" + dto.getBmi() + "] : " +  result.size() + " 개의 추천 음식 조회", result));
     }
 }

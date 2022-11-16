@@ -1,0 +1,73 @@
+= HealthIt API guide
+Andy Wilkinson;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
+
+== FOOD API
+
+=== 1. BMI 음식 추천
+
+==== BMI 음식 추천
+
+`*_1. Success_*`
+
+**request-fields**
+include::{snippets}/v1/foods/bmi/success/request-parameters.adoc[]
+
+**Example request**
+include::{snippets}/v1/foods/bmi/success/http-request.adoc[]
+
+**response-fields**
+include::{snippets}/v1/foods/bmi/success/response-fields.adoc[]
+
+**Example response**
+include::{snippets}/v1/foods/bmi/success/http-response.adoc[]
+
+'''
+
+`*_2. Fail : Nagative Count_*`
+
+**request-fields**
+include::{snippets}/v1/foods/bmi/fail/count_negative/request-parameters.adoc[]
+
+**Example request**
+include::{snippets}/v1/foods/bmi/fail/count_negative/http-request.adoc[]
+
+**Example response**
+include::{snippets}/v1/foods/bmi/fail/count_negative/http-response.adoc[]
+
+NOTE: count 값은 최대 20으로, 20이상 입력해도 최대 20개 내로 음식 목록이 반환된다.
+
+'''
+
+`*_3. Fail : More Then 2 Gender Value_*`
+
+**request-fields**
+include::{snippets}/v1/foods/bmi/fail/gender_more_then_2/request-parameters.adoc[]
+
+**Example request**
+include::{snippets}/v1/foods/bmi/fail/gender_more_then_2/http-request.adoc[]
+
+**Example response**
+include::{snippets}/v1/foods/bmi/fail/gender_more_then_2/http-response.adoc[]
+
+NOTE: 0: 남자 / 1: 여자
+
+'''
+
+`*_4. Fail : Negative BMI_*`
+
+**request-fields**
+include::{snippets}/v1/foods/bmi/fail/bmi_nagative/request-parameters.adoc[]
+
+**Example request**
+include::{snippets}/v1/foods/bmi/fail/bmi_nagative/http-request.adoc[]
+
+**Example response**
+include::{snippets}/v1/foods/bmi/fail/bmi_nagative/http-response.adoc[]

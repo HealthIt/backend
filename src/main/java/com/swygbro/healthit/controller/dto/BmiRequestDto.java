@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class BmiRequestDto {
 
-    @Min(1)
+    @Min(0)
     private int count;      // 조회 개수
 
     @Min(0)
