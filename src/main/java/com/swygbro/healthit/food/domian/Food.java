@@ -9,6 +9,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -47,7 +48,8 @@ public class Food {
     List<Ingredient> ingredients = new ArrayList<>();
 
     @Builder
-    private Food(String foodNm, String foodDesc, Integer calorie, Integer protein, Integer carbs, Integer fat, String img) {
+    private Food(Long id, String foodNm, String foodDesc, Integer calorie, Integer protein, Integer carbs, Integer fat, String img) {
+        this.id = id;
         this.foodNm = foodNm;
         this.foodDesc = foodDesc;
         this.calorie = calorie;
@@ -68,5 +70,18 @@ public class Food {
 
         this.ingredients.add(ingredient);
         ingredient.setFood(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Food food = (Food) o;
+        return Objects.equals(getId(), food.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

@@ -44,6 +44,7 @@ public class FoodSaveDto {
                 .img(this.img)
                 .build();
 
+        // 식재료 추가
         for (String name : irdnts) {
             entity.addIngredient(new Ingredient(name));
         }
