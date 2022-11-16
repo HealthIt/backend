@@ -67,16 +67,14 @@ asciidoctor {
     dependsOn test
 }
 
-task copyDocument(type: Copy) {
-    dependsOn asciidoctor
-    from file("build/docs/asciidoc")
-    into file("src/main/resources/static")
+asciidoctor.doFirst {
+    delete file('src/main/resources/static')
 }
 
 bootJar {
     dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
+    from ("build/docs/asciidoc") {
+        into 'BOOT-INF/classes/static'
     }
 }
 
@@ -85,7 +83,7 @@ jar {
 }
 
 build {
-    dependsOn copyDocument
+    dependsOn asciidoctor
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
