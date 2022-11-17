@@ -221,7 +221,7 @@ class FoodApiControllerTest {
     @Test
     public void 음식목록조회실패_BMI음수() throws Exception {
         // given
-        final FoodRequestDto dto = new FoodRequestDto("재료명", -20.0, 0, 3);
+        final FoodRequestDto dto = new FoodRequestDto("INGREDIENT_NAME", -20.0, 0, 3);
 
         final String url = "/foods/v1" +
                 "?irdntNm=" + dto.getIrdntNm() +
@@ -254,7 +254,7 @@ class FoodApiControllerTest {
     @Test
     public void 음식목록조회성공() throws Exception {
         // given
-        final FoodRequestDto dto = new FoodRequestDto("재료명", 15.0, 0, 3);
+        final FoodRequestDto dto = new FoodRequestDto("INGREDIENT_NAME", 15.0, 0, 3);
 
         final String url = "/foods/v1/" +
                 "?irdntNm=" + dto.getIrdntNm() +
