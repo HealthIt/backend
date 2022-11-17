@@ -36,13 +36,12 @@ public class Food {
     private String foodDesc;        // 음식소개
 
     @Column(nullable = false)
-    private Integer calorie;    // 칼로리
-    private Integer protein;    // 단백질
-    private Integer carbs;      // 탄수화물
-    private Integer fat;        // 지방
+    private Integer calorie;        // 칼로리
+    private Integer protein;        // 단백질
+    private Integer carbs;          // 탄수화물
+    private Integer fat;            // 지방
 
-//    @Lob
-    private String img;         // 음식 이미지
+    private String img;             // 음식 이미지
 
     @OneToMany(mappedBy = "food", cascade = ALL)
     List<Ingredient> ingredients = new ArrayList<>();

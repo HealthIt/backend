@@ -16,8 +16,8 @@ import java.util.List;
 public class FoodSaveDto {
 
     @NotNull
-    private String foodNm;            // 음식명
-    private String foodDesc;            // 음식 소개
+    private String foodNm;          // 음식명
+    private String foodDesc;        // 음식 소개
     private String img;             // 음식 사진
 
     @Min(0)
