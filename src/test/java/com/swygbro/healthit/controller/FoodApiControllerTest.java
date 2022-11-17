@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -82,6 +83,7 @@ class FoodApiControllerTest {
                                 .host("52.78.0.222")
                                 .removePort()
                         ),
+                        preprocessResponse(prettyPrint()),
                         requestParameters(
                                 parameterWithName("count").description("추천 음식 개수"),
                                 parameterWithName("gender").description("성별"),
@@ -112,6 +114,7 @@ class FoodApiControllerTest {
                                 .host("52.78.0.222")
                                 .removePort()
                         ),
+                        preprocessResponse(prettyPrint()),
                         requestParameters(
                                 parameterWithName("count").description("추천 음식 개수"),
                                 parameterWithName("gender").description("성별"),
@@ -142,6 +145,7 @@ class FoodApiControllerTest {
                                 .host("52.78.0.222")
                                 .removePort()
                         ),
+                        preprocessResponse(prettyPrint()),
                         requestParameters(
                                 parameterWithName("count").description("추천 음식 개수"),
                                 parameterWithName("gender").description("성별"),
@@ -222,16 +226,29 @@ class FoodApiControllerTest {
         final String url = "/foods/v1" +
                 "?irdntNm=" + dto.getIrdntNm() +
                 "&bmi=" + dto.getBmi() +
-                "&page=" + dto.getBmi() +
+                "&page=" + dto.getPage() +
                 "&size=" + dto.getSize();
 
         // when
         final ResultActions resultActions = mockMvc.perform(
                 get(url)
+                        .contentType(MediaType.APPLICATION_JSON)
         );
 
         // then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isBadRequest())
+                .andDo(document("v1/foods/fail/bmi_nagative",
+                        preprocessRequest(modifyUris()
+                                .host("52.78.0.222")
+                                .removePort()
+                        ),
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("irdntNm").description("식재료명"),
+                                parameterWithName("bmi").description("BMI"),
+                                parameterWithName("page").description("조회 페이지"),
+                                parameterWithName("size").description("조회 사이즈")
+                        )));
     }
 
     @Test
@@ -263,6 +280,45 @@ class FoodApiControllerTest {
         );
 
         // then
-        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(status().isOk())
+                .andDo(document("v1/foods/success",
+                        preprocessRequest(modifyUris()
+                                .host("52.78.0.222")
+                                .removePort()
+                        ),
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("irdntNm").description("식재료명"),
+                                parameterWithName("bmi").description("BMI"),
+                                parameterWithName("page").description("조회 페이지"),
+                                parameterWithName("size").description("조회 사이즈")
+                        ),
+                        responseFields(
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("메시지"),
+                                fieldWithPath("data.content.[].id").type(JsonFieldType.NUMBER).description("음식 ID"),
+                                fieldWithPath("data.content.[].foodNm").type(JsonFieldType.STRING).description("음식명"),
+                                fieldWithPath("data.content.[].foodDesc").type(JsonFieldType.STRING).description("음식소개"),
+                                fieldWithPath("data.content.[].img").type(JsonFieldType.STRING).description("음식 이미지"),
+
+                                fieldWithPath("data.pageable.offset").ignored(),
+                                fieldWithPath("data.pageable.pageSize").ignored(),
+                                fieldWithPath("data.pageable.pageNumber").ignored(),
+                                fieldWithPath("data.pageable.paged").ignored(),
+                                fieldWithPath("data.pageable.unpaged").ignored(),
+                                fieldWithPath("data.pageable.sort.sorted").ignored(),
+                                fieldWithPath("data.pageable.sort.unsorted").ignored(),
+                                fieldWithPath("data.pageable.sort.empty").ignored(),
+                                fieldWithPath("data.sort.empty").ignored(),
+                                fieldWithPath("data.sort.sorted").ignored(),
+                                fieldWithPath("data.sort.unsorted").ignored(),
+                                fieldWithPath("data.totalPages").ignored(),
+                                fieldWithPath("data.size").ignored(),
+                                fieldWithPath("data.number").ignored(),
+                                fieldWithPath("data.first").ignored(),
+                                fieldWithPath("data.last").ignored(),
+                                fieldWithPath("data.numberOfElements").ignored(),
+                                fieldWithPath("data.empty").ignored(),
+                                fieldWithPath("data.totalElements").ignored()
+                        )));
     }
 }

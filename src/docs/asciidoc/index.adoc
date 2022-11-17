@@ -1,5 +1,4 @@
 = HealthIt API guide
-Andy Wilkinson;
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -71,3 +70,36 @@ include::{snippets}/v1/foods/bmi/fail/bmi_nagative/http-request.adoc[]
 
 **Example response**
 include::{snippets}/v1/foods/bmi/fail/bmi_nagative/http-response.adoc[]
+
+==== 음식 조회
+
+`*_1. Success_*`
+
+**request-fields**
+include::{snippets}/v1/foods/success/request-parameters.adoc[]
+
+**Example request**
+include::{snippets}/v1/foods/success/http-request.adoc[]
+
+**response-fields**
+include::{snippets}/v1/foods/success/response-fields.adoc[]
+
+**Example response**
+include::{snippets}/v1/foods/success/http-response.adoc[]
+
+NOTE: 식재료명, bmi, page, size 모두 생략 가능(식재료명 생략: 모든 음식 조회 / bmi 생략: 정렬 미적용 / page 기본값 0 / size 기본값 10)
+
+'''
+
+`*_2. Fail : Nagative BMI_*`
+
+**request-fields**
+include::{snippets}/v1/foods/fail/bmi_nagative/request-parameters.adoc[]
+
+**Example request**
+include::{snippets}/v1/foods/fail/bmi_nagative/http-request.adoc[]
+
+**Example response**
+include::{snippets}/v1/foods/fail/bmi_nagative/http-response.adoc[]
+
+'''
