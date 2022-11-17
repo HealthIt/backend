@@ -1,4 +1,4 @@
-package com.swygbro.healthit.common;
+package com.swygbro.healthit.common.util;
 
 public class BmiUtils {
 
