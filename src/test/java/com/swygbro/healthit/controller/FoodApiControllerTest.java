@@ -2,7 +2,9 @@ package com.swygbro.healthit.controller;
 
 import com.swygbro.healthit.common.GlobalExceptionHandler;
 import com.swygbro.healthit.controller.dto.BmiRequestDto;
-import com.swygbro.healthit.controller.dto.BmiResultFoodDto;
+import com.swygbro.healthit.controller.dto.BmiResponseDto;
+import com.swygbro.healthit.controller.dto.FoodRequestDto;
+import com.swygbro.healthit.controller.dto.FoodResponseDto;
 import com.swygbro.healthit.food.service.FoodService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,14 +12,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.doReturn;
@@ -46,6 +54,7 @@ class FoodApiControllerTest {
     @BeforeEach
     public void init(RestDocumentationContextProvider restDocumentation) {
         mockMvc = MockMvcBuilders.standaloneSetup(foodApiController)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .apply(documentationConfiguration(restDocumentation))
                 .build();
@@ -54,7 +63,7 @@ class FoodApiControllerTest {
     @Test
     public void BMI음식조회실패_COUNT음수() throws Exception {
         // given
-        final BmiRequestDto dto = new BmiRequestDto(-1, 0, 24);
+        final BmiRequestDto dto = new BmiRequestDto(-1, 0, 24.0);
 
         final String url = "/foods/v1/bmi" +
                 "?count=" + dto.getCount() +
@@ -84,7 +93,7 @@ class FoodApiControllerTest {
     @Test
     public void BMI음식조회실패_성별2이상() throws Exception {
         // given
-        final BmiRequestDto dto = new BmiRequestDto(5, 2, 24);
+        final BmiRequestDto dto = new BmiRequestDto(5, 2, 24.0);
 
         final String url = "/foods/v1/bmi" +
                 "?count=" + dto.getCount() +
@@ -114,7 +123,7 @@ class FoodApiControllerTest {
     @Test
     public void BMI음식조회실패_BMI음수() throws Exception {
         // given
-        final BmiRequestDto dto = new BmiRequestDto(5, 1, -1);
+        final BmiRequestDto dto = new BmiRequestDto(5, 1, -1.0);
 
         final String url = "/foods/v1/bmi" +
                 "?count=" + dto.getCount() +
@@ -144,14 +153,14 @@ class FoodApiControllerTest {
     @Test
     public void BMI음식조회성공() throws Exception {
         // given
-        BmiRequestDto dto = new BmiRequestDto(3, 0, 24);
+        BmiRequestDto dto = new BmiRequestDto(3, 0, 24.0);
 
         final String url = "/foods/v1/bmi" +
                 "?count=" + dto.getCount() +
                 "&gender=" + dto.getGender() +
                 "&bmi=" + dto.getBmi();
 
-        List<BmiResultFoodDto> returnData = new ArrayList<>();
+        List<BmiResponseDto> returnData = new ArrayList<>();
 
         List<String> irdntNms = new ArrayList<>();
         for (int i = 1; i < 4; i++) {
@@ -159,9 +168,9 @@ class FoodApiControllerTest {
         }
 
         for (int i = 1; i < 4; i++) {
-            BmiResultFoodDto data = new BmiResultFoodDto();
+            BmiResponseDto data = new BmiResponseDto();
             data.setId((long) i);
-            data.setFoodName("음식명" + i);
+            data.setFoodNm("음식명" + i);
             data.setCalorie(100);
             data.setImg("data:image/png;base64,DATA");
             data.setIrdntNames(irdntNms);
@@ -194,7 +203,7 @@ class FoodApiControllerTest {
                                         .description("메시지"),
                                 fieldWithPath("data.[].id").type(JsonFieldType.NUMBER)
                                         .description("음식 ID"),
-                                fieldWithPath("data.[].foodName").type(JsonFieldType.STRING)
+                                fieldWithPath("data.[].foodNm").type(JsonFieldType.STRING)
                                         .description("음식명"),
                                 fieldWithPath("data.[].calorie").type(JsonFieldType.NUMBER)
                                         .description("칼로리"),
@@ -203,5 +212,57 @@ class FoodApiControllerTest {
                                 fieldWithPath("data.[].irdntNames").type(JsonFieldType.ARRAY)
                                         .description("식재료 목록")
                         )));
+    }
+
+    @Test
+    public void 음식목록조회실패_BMI음수() throws Exception {
+        // given
+        final FoodRequestDto dto = new FoodRequestDto("재료명", -20.0, 0, 3);
+
+        final String url = "/foods/v1" +
+                "?irdntNm=" + dto.getIrdntNm() +
+                "&bmi=" + dto.getBmi() +
+                "&page=" + dto.getBmi() +
+                "&size=" + dto.getSize();
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                get(url)
+        );
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 음식목록조회성공() throws Exception {
+        // given
+        final FoodRequestDto dto = new FoodRequestDto("재료명", 15.0, 0, 3);
+
+        final String url = "/foods/v1/" +
+                "?irdntNm=" + dto.getIrdntNm() +
+                "&bmi=" + dto.getBmi() +
+                "&page=" + dto.getPage() +
+                "&size=" + dto.getSize();
+
+        Page<FoodResponseDto> data = PageableExecutionUtils.getPage(
+                Arrays.asList(
+                        new FoodResponseDto(1L, "음식명1", "음식소개", "data:image/png;base64,DATA"),
+                        new FoodResponseDto(2L, "음식명2", "음식소개", "data:image/png;base64,DATA"),
+                        new FoodResponseDto(3L, "음식명2", "음식소개", "data:image/png;base64,DATA")
+                ),
+                PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "calorie")),
+                () -> 4
+        );
+
+        doReturn(data).when(foodService).findFoodByIrdntNm(dto);
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                get(url)
+        );
+
+        // then
+        resultActions.andExpect(status().isOk());
     }
 }
