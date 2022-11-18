@@ -12,16 +12,16 @@ public class FoodDetailDto {
     private String foodNm;
     private String foodDesc;
     private Integer calorie;
-    private Integer protein;
     private Integer carbs;
+    private Integer protein;
     private Integer fat;
 
     public FoodDetailDto(Food food) {
         this.foodNm = food.getFoodNm();
         this.foodDesc = food.getFoodDesc();
         this.calorie = food.getCalorie();
-        this.protein = food.getProtein();
         this.carbs = food.getCarbs();
+        this.protein = food.getProtein();
         this.fat = food.getFat();
     }
 }

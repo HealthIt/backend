@@ -103,3 +103,34 @@ include::{snippets}/v1/foods/fail/bmi_nagative/http-request.adoc[]
 include::{snippets}/v1/foods/fail/bmi_nagative/http-response.adoc[]
 
 '''
+
+==== 음식 상세정보 조회
+
+`*_1. Success_*`
+
+**request-fields**
+include::{snippets}/v1/foods/detail/success/path-parameters.adoc[]
+
+**Example request**
+include::{snippets}/v1/foods/detail/success/http-request.adoc[]
+
+**response-fields**
+include::{snippets}/v1/foods/detail/success/response-fields.adoc[]
+
+**Example response**
+include::{snippets}/v1/foods/detail/success/http-response.adoc[]
+
+'''
+
+`*_2. Fail : Not Found Food Id_*`
+
+**request-fields**
+include::{snippets}/v1/foods/detail/fail/not_found_foodId/path-parameters.adoc[]
+
+**Example request**
+include::{snippets}/v1/foods/detail/fail/not_found_foodId/http-request.adoc[]
+
+**Example response**
+include::{snippets}/v1/foods/detail/fail/not_found_foodId/http-response.adoc[]
+
+'''

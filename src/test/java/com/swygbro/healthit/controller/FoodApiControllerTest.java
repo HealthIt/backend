@@ -342,7 +342,16 @@ class FoodApiControllerTest {
         );
 
         // then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isBadRequest())
+                .andDo(document("v1/foods/detail/fail/not_found_foodId",
+                        preprocessRequest(modifyUris()
+                                .host("52.78.0.222")
+                                .removePort()
+                        ),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("음식 식별값")
+                        )));
     }
 
     @Test
@@ -367,6 +376,24 @@ class FoodApiControllerTest {
         );
 
         // then
-        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(status().isOk())
+                .andDo(document("v1/foods/detail/success",
+                        preprocessRequest(modifyUris()
+                                .host("52.78.0.222")
+                                .removePort()
+                        ),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("음식 식별값")
+                        ),
+                        responseFields(
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("메시지"),
+                                fieldWithPath("data.foodNm").type(JsonFieldType.STRING).description("음식명"),
+                                fieldWithPath("data.foodDesc").type(JsonFieldType.STRING).description("음식소개"),
+                                fieldWithPath("data.calorie").type(JsonFieldType.NUMBER).description("칼로리"),
+                                fieldWithPath("data.carbs").type(JsonFieldType.NUMBER).description("탄수화물"),
+                                fieldWithPath("data.protein").type(JsonFieldType.NUMBER).description("단백질"),
+                                fieldWithPath("data.fat").type(JsonFieldType.NUMBER).description("지방")
+                        )));
     }
 }
