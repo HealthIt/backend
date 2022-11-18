@@ -1,10 +1,10 @@
 package com.swygbro.healthit.controller;
 
 import com.swygbro.healthit.common.GlobalExceptionHandler;
-import com.swygbro.healthit.controller.dto.BmiRequestDto;
-import com.swygbro.healthit.controller.dto.BmiResponseDto;
-import com.swygbro.healthit.controller.dto.FoodRequestDto;
-import com.swygbro.healthit.controller.dto.FoodResponseDto;
+import com.swygbro.healthit.controller.dto.*;
+import com.swygbro.healthit.exception.FoodException;
+import com.swygbro.healthit.food.domian.Food;
+import com.swygbro.healthit.food.domian.FoodRepository;
 import com.swygbro.healthit.food.service.FoodService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,16 +28,18 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static com.swygbro.healthit.common.enumType.ErrorResult.FOOD_NOT_FOUND;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +51,9 @@ class FoodApiControllerTest {
 
     @Mock
     private FoodService foodService;
+
+    @Mock
+    private FoodRepository foodRepository;
 
     private MockMvc mockMvc;
 
@@ -320,5 +325,48 @@ class FoodApiControllerTest {
                                 fieldWithPath("data.empty").ignored(),
                                 fieldWithPath("data.totalElements").ignored()
                         )));
+    }
+
+    @Test
+    public void 음식상세정보조회실패_음식이존재하지않음() throws Exception {
+        // given
+        final String url = "/foods/v1/{id}";
+
+        doThrow(new FoodException(FOOD_NOT_FOUND))
+                .when(foodRepository)
+                .findById(-1L);
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                get(url, -1)
+        );
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 음식상세정보조회성공() throws Exception {
+        // given
+        final String url = "/foods/v1/{id}";
+
+        doReturn(Optional.of(Food.builder().foodNm("음식명")
+                .foodDesc("음식소개")
+                .calorie(300)
+                .protein(50)
+                .carbs(50)
+                .fat(50)
+                .img("data:image/png;base64,DATA")
+                .build())
+        ).when(foodRepository)
+                .findById(-1L);
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                get(url, -1)
+        );
+
+        // then
+        resultActions.andExpect(status().isOk());
     }
 }
