@@ -36,19 +36,19 @@ public class Food {
     private String foodDesc;        // 음식소개
 
     @Column(nullable = false)
-    private Integer calorie;    // 칼로리
-    private Integer protein;    // 단백질
-    private Integer carbs;      // 탄수화물
-    private Integer fat;        // 지방
+    private Integer calorie;        // 칼로리
+    private Integer protein;        // 단백질
+    private Integer carbs;          // 탄수화물
+    private Integer fat;            // 지방
 
-//    @Lob
-    private String img;         // 음식 이미지
+    private String img;             // 음식 이미지
 
     @OneToMany(mappedBy = "food", cascade = ALL)
     List<Ingredient> ingredients = new ArrayList<>();
 
     @Builder
-    private Food(Long id, String foodNm, String foodDesc, Integer calorie, Integer protein, Integer carbs, Integer fat, String img) {
+    private Food(final Long id, final String foodNm, final String foodDesc, final Integer calorie,
+                 final Integer protein, final Integer carbs, final Integer fat, final String img) {
         this.id = id;
         this.foodNm = foodNm;
         this.foodDesc = foodDesc;
@@ -63,7 +63,7 @@ public class Food {
      * 식재료 추가
      * @param ingredient 식재료 Entity
      */
-    public void addIngredient(Ingredient ingredient) {
+    public void addIngredient(final Ingredient ingredient) {
         if(ingredient.getFood() != null) {
             ingredient.getFood().getIngredients().remove(ingredient);
         }

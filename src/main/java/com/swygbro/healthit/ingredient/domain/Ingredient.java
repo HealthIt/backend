@@ -33,7 +33,7 @@ public class Ingredient {
     @JoinColumn(name = "food_id")
     private Food food;
 
-    public Ingredient(String irdntNm) {
+    public Ingredient(final String irdntNm) {
         this.irdntNm = irdntNm;
     }
 }

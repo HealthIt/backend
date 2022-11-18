@@ -1,11 +1,11 @@
-package com.swygbro.healthit.common;
+package com.swygbro.healthit.common.util;
 
 public class BmiUtils {
 
     private static final int[][] BMI_CALORIE = {{60, 59}, {58, 57}, {56, 52}, {50, 50}, {44, 44}};
 
-    public static int convertBmiToKcal(int gender, double bmi) {
-        int maxKcal;
+    public static int convertBmiToKcal(final int gender, final double bmi) {
+        final int maxKcal;
 
         if (bmi > 39) {
             maxKcal = (int) (bmi * BMI_CALORIE[0][gender]);
