@@ -27,7 +27,7 @@ public class FoodRepositoryImpl implements FoodRepositoryQuerydsl {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<FoodResponseDto> findFoodByContainIrdntNm(String irdntNm, Pageable pageable) {
+    public Page<FoodResponseDto> findFoodByContainIrdntNm(final String irdntNm, final Pageable pageable) {
 
         final List<OrderSpecifier<?>> orders = new ArrayList<>();
 
@@ -37,9 +37,9 @@ public class FoodRepositoryImpl implements FoodRepositoryQuerydsl {
             orders.add(orderId);
         }
 
-        OrderSpecifier[] orderSpecifiers = orders.toArray(OrderSpecifier[]::new);
+        final OrderSpecifier[] orderSpecifiers = orders.toArray(OrderSpecifier[]::new);
 
-        List<FoodResponseDto> content = queryFactory
+        final List<FoodResponseDto> content = queryFactory
                 .select(Projections.constructor(FoodResponseDto.class,
                         food.id,
                         food.foodNm,
@@ -55,7 +55,7 @@ public class FoodRepositoryImpl implements FoodRepositoryQuerydsl {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Long> countQuery = queryFactory
+        final JPAQuery<Long> countQuery = queryFactory
                 .select(ingredient.food.id.countDistinct())
                 .from(ingredient)
                 .where(irdntNmContains(irdntNm));
@@ -63,7 +63,7 @@ public class FoodRepositoryImpl implements FoodRepositoryQuerydsl {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression irdntNmContains(String irdntNm) {
+    private BooleanExpression irdntNmContains(final String irdntNm) {
         return StringUtils.hasText(irdntNm) ? ingredient.irdntNm.contains(irdntNm) : null;
     }
 }

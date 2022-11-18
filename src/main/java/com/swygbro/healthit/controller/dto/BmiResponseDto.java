@@ -22,7 +22,7 @@ public class BmiResponseDto {
     private String img;                 // 음식 이미지
     private List<String> irdntNames;    // 재료명
 
-    public BmiResponseDto(Food food) {
+    public BmiResponseDto(final Food food) {
         this.id = food.getId();
         this.foodNm = food.getFoodNm();
         this.calorie = food.getCalorie();

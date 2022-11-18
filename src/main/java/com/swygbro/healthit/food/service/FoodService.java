@@ -45,22 +45,22 @@ public class FoodService {
      *            (조회 음식 수 보다 조회된 결과의 수가 적은경우 조회된 결과만 반환)
      * @return 추천음식 목록
      */
-    public List<BmiResponseDto> findFoodByBmi(BmiRequestDto dto) {
+    public List<BmiResponseDto> findFoodByBmi(final BmiRequestDto dto) {
         PageRequest pageRequest = PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "calorie"));
 
         // 최대 칼로리 한끼 평균 값
-        int maxCalorie = BmiUtils.convertBmiToKcal(dto.getGender(), dto.getBmi());
+        final int maxCalorie = BmiUtils.convertBmiToKcal(dto.getGender(), dto.getBmi());
         // 칼로리에 맞는 음식 조회(20개)
-        Page<Food> foods = foodRepository.findByCalorieBefore(maxCalorie, pageRequest);
+        final Page<Food> foods = foodRepository.findByCalorieBefore(maxCalorie, pageRequest);
 
         // 조회된 음식 수보다 count가 크거나 같은 경우 조회된 음식만 반환
         if (foods.getTotalElements() <= dto.getCount()) {
             return foods.map(BmiResponseDto::new).getContent();
         }
 
-        List<BmiResponseDto> result = new ArrayList<>();
+        final List<BmiResponseDto> result = new ArrayList<>();
 
-        List<Food> content = new ArrayList<>(foods.getContent());
+        final List<Food> content = new ArrayList<>(foods.getContent());
 
         // 조회된 음식중 랜덤으로 count 만큼 추출
         for(int i=0; i<dto.getCount(); i++) {
@@ -84,7 +84,7 @@ public class FoodService {
      * @param dto 음식 목록 조회 정보(식재료명, bmi, page, size)
      * @return 음식 목록
      */
-    public Page<FoodResponseDto> findFoodByIrdntNm(FoodRequestDto dto) {
+    public Page<FoodResponseDto> findFoodByIrdntNm(final FoodRequestDto dto) {
 
         // Bmi에 따라 정렬 변경
         //  - 24이상: 칼로리 오름차순
@@ -97,7 +97,7 @@ public class FoodService {
             sort = Sort.by(Sort.Direction.DESC, "calorie");
         }
 
-        PageRequest pageRequest = sort != null ? PageRequest.of(dto.getPage(), dto.getSize(), sort)
+        final PageRequest pageRequest = sort != null ? PageRequest.of(dto.getPage(), dto.getSize(), sort)
                                                : PageRequest.of(dto.getPage(), dto.getSize());
 
         return foodRepository.findFoodByContainIrdntNm(dto.getIrdntNm(), pageRequest);

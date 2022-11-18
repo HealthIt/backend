@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     protected ResponseEntity<ErrorResponse> BindExceptionHandle(final BindException ex) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (ObjectError objectError : ex.getAllErrors()) {
             sb.append(objectError.getDefaultMessage());
             sb.append(System.getProperty("line.separator"));

@@ -47,7 +47,8 @@ public class Food {
     List<Ingredient> ingredients = new ArrayList<>();
 
     @Builder
-    private Food(Long id, String foodNm, String foodDesc, Integer calorie, Integer protein, Integer carbs, Integer fat, String img) {
+    private Food(final Long id, final String foodNm, final String foodDesc, final Integer calorie,
+                 final Integer protein, final Integer carbs, final Integer fat, final String img) {
         this.id = id;
         this.foodNm = foodNm;
         this.foodDesc = foodDesc;
@@ -62,7 +63,7 @@ public class Food {
      * 식재료 추가
      * @param ingredient 식재료 Entity
      */
-    public void addIngredient(Ingredient ingredient) {
+    public void addIngredient(final Ingredient ingredient) {
         if(ingredient.getFood() != null) {
             ingredient.getFood().getIngredients().remove(ingredient);
         }

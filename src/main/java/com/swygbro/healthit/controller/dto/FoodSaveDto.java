@@ -34,7 +34,7 @@ public class FoodSaveDto {
     private List<String> irdnts;    // 식재료 목록
 
     public Food toEntity() {
-        Food entity = Food.builder()
+        final Food entity = Food.builder()
                 .foodNm(this.foodNm)
                 .foodDesc(this.foodDesc)
                 .calorie(this.calorie)

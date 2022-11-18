@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface FoodRepository extends JpaRepository<Food, Long>, FoodRepositoryQuerydsl {
 
-    Page<Food> findByCalorieBefore(int calorie, Pageable pageable);
+    Page<Food> findByCalorieBefore(final int calorie, final Pageable pageable);
 }

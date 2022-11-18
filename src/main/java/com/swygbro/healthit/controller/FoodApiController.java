@@ -44,15 +44,15 @@ public class FoodApiController {
      * @return 추천음식 목록
      */
     @GetMapping("/v1/bmi")
-    public ResponseDto<List<BmiResponseDto>> findFoodByBmi(@ModelAttribute @Valid BmiRequestDto dto) {
+    public ResponseDto<List<BmiResponseDto>> findFoodByBmi(@ModelAttribute @Valid final BmiRequestDto dto) {
         List<BmiResponseDto> result = foodService.findFoodByBmi(dto);
 
         return ResponseDto.of("BMI [" + dto.getBmi() + "] : " +  result.size() + " 개의 추천 음식 조회", result);
     }
 
     @GetMapping("/v1")
-    public ResponseDto<Page<FoodResponseDto>> findFoodList(@ModelAttribute @Valid FoodRequestDto dto) {
-        Page<FoodResponseDto> result = foodService.findFoodByIrdntNm(dto);
+    public ResponseDto<Page<FoodResponseDto>> findFoodList(@ModelAttribute @Valid final FoodRequestDto dto) {
+        final Page<FoodResponseDto> result = foodService.findFoodByIrdntNm(dto);
 
         return ResponseDto.of("데이터 조회 성공", result);
     }
