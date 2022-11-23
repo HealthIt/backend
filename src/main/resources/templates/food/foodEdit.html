@@ -63,7 +63,7 @@
 
         <label for="img" accept="image/*">음식 이미지</label>
         <input id="upload" type="file" onchange="imgUpload()">
-        <input type="hidden" id="img" name="img">
+        <input type="hidden" id="img" name="img" th:value="*{img}">
         <div>
             <p>기존 이미지</p>
             <img th:src="*{img}">
