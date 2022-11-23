@@ -257,6 +257,34 @@ class FoodApiControllerTest {
     }
 
     @Test
+    public void 음식목록조회성공_파라미터없음() throws Exception {
+        // given
+        final FoodRequestDto dto = new FoodRequestDto();
+
+        final String url = "/foods/v1";
+
+        Page<FoodResponseDto> data = PageableExecutionUtils.getPage(
+                Arrays.asList(
+                        new FoodResponseDto(1L, "음식명1", "음식소개", "data:image/png;base64,DATA"),
+                        new FoodResponseDto(2L, "음식명2", "음식소개", "data:image/png;base64,DATA"),
+                        new FoodResponseDto(3L, "음식명2", "음식소개", "data:image/png;base64,DATA")
+                ),
+                PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "calorie")),
+                () -> 4
+        );
+
+        doReturn(data).when(foodService).findFoodByIrdntNm(dto);
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                get(url)
+        );
+
+        // then
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
     public void 음식목록조회성공() throws Exception {
         // given
         final FoodRequestDto dto = new FoodRequestDto("INGREDIENT_NAME", 15.0, 0, 3);
