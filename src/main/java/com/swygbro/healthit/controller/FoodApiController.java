@@ -40,9 +40,19 @@ public class FoodApiController {
      * @return CREATE(201)
      */
     @PostMapping("/new")
-    public ResponseEntity<Void> saveFood(@RequestBody @Valid final FoodSaveDto dto) {
+    public ResponseEntity<Void> save(@RequestBody @Valid final FoodSaveDto dto) {
         foodService.save(dto.toEntity());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     * 음식 정보 삭제
+     *
+     * @param foodId 음식 식별값
+     */
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable("id") final Long foodId) {
+        foodRepository.deleteById(foodId);
     }
 
     /**

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <meta charset="UTF-8">
     <title>Health It</title>
     <style>
@@ -23,15 +24,16 @@
 <div>
     <table>
         <colgroup>
-            <col width="5%">
+            <col width="3%">
             <col width="10%">
-            <col width="32%">
+            <col width="30%">
             <col width="7%">
             <col width="7%">
             <col width="7%">
             <col width="7%">
             <col width="15%">
             <col width="10%">
+            <col width="5%">
         </colgroup>
         <thead>
         <tr>
@@ -44,6 +46,7 @@
             <th>지방</th>
             <th>음식이미지</th>
             <th>식재료</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -65,12 +68,30 @@
             <td>
                 <li th:each="irdntNm : ${food.ingredients}"
                     th:text="${irdntNm.irdntNm}">
-
                 </li>
+            </td>
+            <td>
+                <button th:foodId="${food.id}"
+                        th:onclick="removeFood(this.getAttribute('foodId'))">삭제</button>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
 </body>
+<script>
+    function removeFood(foodId) {
+
+        if (confirm("삭제하시겠습니까?")) {
+            $.ajax({
+                type       : "DELETE",
+                url        : "/foods/delete/" + foodId,
+                contentType: "application/json;charset=utf-8;",
+                success    : () => {
+                    location.reload();
+                }
+            });
+        }
+    }
+</script>
 </html>
