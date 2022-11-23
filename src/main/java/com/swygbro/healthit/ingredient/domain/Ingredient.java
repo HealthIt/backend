@@ -25,6 +25,7 @@ public class Ingredient {
     @Column(name = "irdnt_id")
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private String irdntNm;        // 식재료명
 

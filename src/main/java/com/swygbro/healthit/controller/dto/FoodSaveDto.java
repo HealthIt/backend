@@ -16,22 +16,22 @@ import java.util.List;
 public class FoodSaveDto {
 
     @NotNull
-    private String foodNm;          // 음식명
-    private String foodDesc;        // 음식 소개
-    private String img;             // 음식 사진
+    private String foodNm;                  // 음식명
+    private String foodDesc;                // 음식 소개
+    private String img;                     // 음식 사진
 
     @Min(0)
     @NotNull
-    private Integer calorie;        // 칼로리
+    private Integer calorie;                // 칼로리
     @Min(0)
-    private Integer protein;        // 단백질
+    private Integer protein;                // 단백질
     @Min(0)
-    private Integer carbs;          // 탄수화물
+    private Integer carbs;                  // 탄수화물
     @Min(0)
-    private Integer fat;            // 지방
+    private Integer fat;                    // 지방
 
     @NotNull
-    private List<String> irdnts;    // 식재료 목록
+    private List<IrdntSaveDto> irdnts;      // 식재료 목록
 
     public Food toEntity() {
         final Food entity = Food.builder()
@@ -45,8 +45,10 @@ public class FoodSaveDto {
                 .build();
 
         // 식재료 추가
-        for (String name : irdnts) {
-            entity.addIngredient(new Ingredient(name));
+        for (IrdntSaveDto irndt : irdnts) {
+            if (irndt.getIrdntNm() != null) {
+                entity.addIngredient(new Ingredient(irndt.getIrdntNm()));
+            }
         }
 
         return entity;

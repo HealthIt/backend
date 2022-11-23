@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Health It</title>
+    <style>
+        .food > label {
+            display: inline-block;
+            width: 100px;
+            margin: 5px;
+        }
+
+        .food > input, textarea {
+            width: 200px;
+            margin: 5px;
+        }
+
+        img {
+            max-width: 150px;
+            max-height: 150px;
+        }
+    </style>
+</head>
+<body>
+<form th:object="${food}" method="POST">
+    <div class="food">
+        <h1>음식 수정/삭제</h1>
+        <br>
+        <button type="submit">수정</button>
+        <br>
+
+        <input type="hidden" th:field="*{id}">
+
+        <label th:for="foodNm">음식명</label>
+        <input type="text"
+               placeholder="음식명"
+               th:field="*{foodNm}">
+        <br>
+
+        <label th:for="foodDesc">음식소개</label>
+        <textarea placeholder="음식소개"
+                  th:field="*{foodDesc}">
+        </textarea>
+
+        <div class="food">
+            <label th:for="calorie">칼로리</label>
+            <input type="text" placeholder="칼로리"
+                   th:field="*{calorie}">
+
+            <label th:for="protein">단백질</label>
+            <input type="text" placeholder="단백질"
+                   th:field="*{protein}">
+
+            <label th:for="carbs">탄수화물</label>
+            <input type="text" placeholder="탄수화물"
+                   th:field="*{carbs}">
+
+            <label th:for="fat">지방</label>
+            <input type="text" placeholder="지방"
+                   th:field="*{fat}">
+        </div>
+
+        <label for="img" accept="image/*">음식 이미지</label>
+        <input id="upload" type="file" onchange="imgUpload()">
+        <input type="hidden" id="img" name="img">
+        <div>
+            <p>기존 이미지</p>
+            <img th:src="*{img}">
+        </div>
+    </div>
+
+    <div class="irdnt">
+        <h3>식재료</h3>
+        <br>
+
+        <div style="display: flex;">
+            <label style="margin: 5px; min-width: 50px;">재료</label>
+            <button type="button" onclick="addIrdnt()" style="margin: 5px; width: 30px; height: 21px;">+</button>
+            <div id="irdnts">
+                <div th:each="irdnt : *{ingredients}">
+                    <input type="hidden" th:name="'irdnts[' + ${irdntStat.index} + '].id'" th:value="${irdnt.id}">
+                    <input type="text" style="width: 200px; margin: 5px;" placeholder="재료"
+                           th:name="'irdnts[' + ${irdntStat.index} + '].irdntNm'"
+                           th:value="${irdnt.irdntNm}">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<button onclick="initData()">삭제</button>
+</body>
+<script>
+    /**
+     * 식재료 항목 추가
+     */
+    function addIrdnt() {
+        const idx = document.getElementById("irdnts").childElementCount;
+
+        let el = document.createElement("input");
+        el.setAttribute("style", "width: 200px; margin: 5px;")
+        el.setAttribute("tpye", "text");
+        el.setAttribute("name", "irdnts[" + idx + "].irdntNm");
+        el.setAttribute("placeholder", "재료")
+
+        document.getElementById("irdnts").append(el);
+    }
+
+    /**
+     * 이미지 파일 데이터 변환
+     * file -> DataUrl
+     */
+    function imgUpload() {
+        let file = document.getElementById("upload").files[0];
+
+        if (imgValid(file.name)) {
+            let reader = new FileReader();
+
+            reader.onload = () => {
+                document.getElementById("img").value = reader.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    /**
+     * 이미지 파일 유효성 검사
+     * @param filename 확장자 표함 파일명
+     * @returns {boolean} 이미지 파일 여부
+     *                    - true: 이미지 파일
+     */
+    const checkFileType = ["jpg", "gif", "png", "jpeg", "bmp", "tif"];
+    function imgValid(filename) {
+        const fileType = filename.split(".")[1].toLowerCase();
+
+        if (checkFileType.indexOf(fileType) === -1) {
+            alert("이미지 형식의 파일만 첨부 가능합니다.");
+            document.getElementById("img").value = "";    //초기화를 위한 추가 코드
+
+            return false;
+        }
+
+        return true;
+    }
+</script>
+</html>

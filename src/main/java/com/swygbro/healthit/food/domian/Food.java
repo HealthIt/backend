@@ -1,5 +1,6 @@
 package com.swygbro.healthit.food.domian;
 
+import com.swygbro.healthit.controller.dto.FoodSaveDto;
 import com.swygbro.healthit.ingredient.domain.Ingredient;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +42,7 @@ public class Food {
     private Integer carbs;          // 탄수화물
     private Integer fat;            // 지방
 
+    @Lob
     private String img;             // 음식 이미지
 
     @OneToMany(mappedBy = "food", cascade = ALL)
@@ -59,6 +61,19 @@ public class Food {
         this.img = img;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Food food = (Food) o;
+        return Objects.equals(getId(), food.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
     /**
      * 식재료 추가
      * @param ingredient 식재료 Entity
@@ -72,16 +87,17 @@ public class Food {
         ingredient.setFood(this);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Food food = (Food) o;
-        return Objects.equals(getId(), food.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
+    /**
+     * 음식 정보 업데이트
+     * @param dto 업데이트 정보
+     */
+    public void updateInfo(final FoodSaveDto dto) {
+        this.foodNm = dto.getFoodNm();
+        this.foodDesc = dto.getFoodDesc();
+        this.calorie = dto.getCalorie();
+        this.protein = dto.getProtein();
+        this.carbs = dto.getCarbs();
+        this.fat = dto.getFat();
+        this.img = dto.getImg();
     }
 }
