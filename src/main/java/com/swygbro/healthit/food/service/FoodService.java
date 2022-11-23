@@ -91,14 +91,17 @@ public class FoodService {
         //  - 19미만: 칼로리 내림차순
         //  - 19~24: 정렬 없음
         Sort sort = null;
-        if (dto.getBmi() >= 24) {
-            sort = Sort.by("calorie");
-        } else if (dto.getBmi() < 19) {
-            sort = Sort.by(Sort.Direction.DESC, "calorie");
+
+        if(dto.getBmi() != null) {
+            if (dto.getBmi() >= 24) {
+                sort = Sort.by("calorie");
+            } else if (dto.getBmi() < 19) {
+                sort = Sort.by(Sort.Direction.DESC, "calorie");
+            }
         }
 
         final PageRequest pageRequest = sort != null ? PageRequest.of(dto.getPage(), dto.getSize(), sort)
-                                               : PageRequest.of(dto.getPage(), dto.getSize());
+                                                     : PageRequest.of(dto.getPage(), dto.getSize());
 
         return foodRepository.findFoodByContainIrdntNm(dto.getIrdntNm(), pageRequest);
     }

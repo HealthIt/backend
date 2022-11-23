@@ -20,5 +20,10 @@ public class FoodRequestDto {
 
     private int page;
 
-    private int size = 10;
+    private int size;
+
+    public FoodRequestDto() {
+        this.page = 0;
+        this.size = 10;
+    }
 }

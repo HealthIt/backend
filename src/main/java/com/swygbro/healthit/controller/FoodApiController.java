@@ -54,7 +54,7 @@ public class FoodApiController {
      */
     @GetMapping("/v1/bmi")
     public ResponseDto<List<BmiResponseDto>> findFoodByBmi(@ModelAttribute @Valid final BmiRequestDto dto) {
-        List<BmiResponseDto> result = foodService.findFoodByBmi(dto);
+        final List<BmiResponseDto> result = foodService.findFoodByBmi(dto);
 
         return ResponseDto.of("BMI [" + dto.getBmi() + "] : " +  result.size() + " 개의 추천 음식 조회", result);
     }
@@ -72,9 +72,15 @@ public class FoodApiController {
         return ResponseDto.of("음식목록 조회 성공", result);
     }
 
+    /**
+     * 음식 상세정보 조회
+     *
+     * @param foodId 음식 식별값
+     * @return 음식 상세정보
+     */
     @GetMapping("/v1/{id}")
     public ResponseDto<FoodDetailDto> findFoodDetail(@PathVariable("id") final long foodId) {
-        Food findFood = foodRepository.findById(foodId).orElseThrow(() -> {
+        final Food findFood = foodRepository.findById(foodId).orElseThrow(() -> {
             throw new FoodException(ErrorResult.FOOD_NOT_FOUND);
         });
 
