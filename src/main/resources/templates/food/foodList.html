@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health It</title>
+    <style>
+        table {
+            width: 100%;
+            border: 1px solid #444444;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #444444;
+        }
+        img {
+            max-width: 150px;
+            max-height: 150px;
+        }
+    </style>
+</head>
+<body>
+<h1>음식 목록</h1>
+<div>
+    <table>
+        <colgroup>
+            <col width="5%">
+            <col width="10%">
+            <col width="32%">
+            <col width="7%">
+            <col width="7%">
+            <col width="7%">
+            <col width="7%">
+            <col width="15%">
+            <col width="10%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>음식명</th>
+            <th>음식소개</th>
+            <th>칼로리</th>
+            <th>단백질</th>
+            <th>탄수화물</th>
+            <th>지방</th>
+            <th>음식이미지</th>
+            <th>식재료</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="food : ${foods}">
+            <td th:text="${food.id}"></td>
+            <td>
+                <a th:text="${food.foodNm}"
+                   th:href="@{/admin/food/{id}(id = ${food.id})}">
+                </a>
+            </td>
+            <td th:text="${food.foodDesc}"></td>
+            <td th:text="${food.calorie}"></td>
+            <td th:text="${food.protein}"></td>
+            <td th:text="${food.carbs}"></td>
+            <td th:text="${food.fat}"></td>
+            <td>
+                <img th:src="${food.img}">
+            </td>
+            <td>
+                <li th:each="irdntNm : ${food.ingredients}"
+                    th:text="${irdntNm.irdntNm}">
+
+                </li>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
