@@ -122,7 +122,9 @@
         let irdntNms = [];
 
         document.getElementsByName("irdntNm").forEach(e => {
-            irdntNms.push(e.value);
+            irdntNms.push({
+                irdntNm: e.value
+            });
         })
 
         const file = document.getElementById("img").files[0];
