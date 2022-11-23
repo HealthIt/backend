@@ -34,6 +34,7 @@ public class FoodService {
      * 음식 저장
      * @param food 음식 정보
      */
+    @Transactional(rollbackFor = Exception.class)
     public void save(Food food) {
         foodRepository.save(food);
     }
