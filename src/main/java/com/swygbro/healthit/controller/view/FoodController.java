@@ -55,7 +55,7 @@ public class FoodController {
     }
 
     /**
-     * 음식 수정/삭제 View 호출
+     * 음식 수정 View 호출
      * @param foodId 조회 음식 식별 값
      * @param model Model 객체
      * @return Url

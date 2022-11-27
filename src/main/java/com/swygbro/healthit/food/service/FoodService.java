@@ -121,7 +121,7 @@ public class FoodService {
      * @param foodId
      * @param dto
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateFood(Long foodId, FoodSaveDto dto) {
         // 음식 정보 조회
         Food food = foodRepository.findFetchById(foodId).orElseThrow(() -> {
@@ -143,6 +143,7 @@ public class FoodService {
                 if (StringUtils.hasText(irdnt.getIrdntNm())) {
                     ingredient.setIrdntNm(irdnt.getIrdntNm());
                 } else {
+                    food.getIngredients().remove(ingredient);
                     ingredientRepository.delete(ingredient);
                 }
             } else {                            // 추가
