@@ -57,7 +57,7 @@ jobs:
       run: mkdir -p deploy
 
     - name: Copy secret.yml
-      run: cp ./src/main/resources/application-secret.yml ./deploy
+      run: cp ./src/main/resources/application-secret.yml ./deploy/secret.yml
 
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy
