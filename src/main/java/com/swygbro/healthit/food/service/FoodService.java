@@ -56,7 +56,7 @@ public class FoodService {
      * @return 추천음식 목록
      */
     public List<BmiResponseDto> findFoodByBmi(final BmiRequestDto dto) {
-        PageRequest pageRequest = PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "calorie"));
+        final PageRequest pageRequest = PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "calorie"));
 
         // 최대 칼로리 한끼 평균 값
         final int maxCalorie = BmiUtils.convertBmiToKcal(dto.getGender(), dto.getBmi());
@@ -118,8 +118,8 @@ public class FoodService {
 
     /**
      * 음식정보 수정
-     * @param foodId
-     * @param dto
+     * @param foodId 음식 식별 값
+     * @param dto 수정 정보
      */
     @Transactional(rollbackFor = Exception.class)
     public void updateFood(Long foodId, FoodSaveDto dto) {

@@ -11,6 +11,7 @@ public class FoodDetailDto {
 
     private String foodNm;
     private String foodDesc;
+    private String img;
     private Integer calorie;
     private Integer carbs;
     private Integer protein;
@@ -19,6 +20,7 @@ public class FoodDetailDto {
     public FoodDetailDto(Food food) {
         this.foodNm = food.getFoodNm();
         this.foodDesc = food.getFoodDesc();
+        this.img = food.getImg();
         this.calorie = food.getCalorie();
         this.carbs = food.getCarbs();
         this.protein = food.getProtein();
