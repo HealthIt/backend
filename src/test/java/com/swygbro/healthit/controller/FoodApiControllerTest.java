@@ -297,9 +297,9 @@ class FoodApiControllerTest {
 
         Page<FoodResponseDto> data = PageableExecutionUtils.getPage(
                 Arrays.asList(
-                        new FoodResponseDto(1L, "음식명1", "음식소개", "data:image/png;base64,DATA"),
-                        new FoodResponseDto(2L, "음식명2", "음식소개", "data:image/png;base64,DATA"),
-                        new FoodResponseDto(3L, "음식명2", "음식소개", "data:image/png;base64,DATA")
+                        new FoodResponseDto(1L, "베이컨포테이토 시저샐러드&양파 치즈 마요 드레싱", "음식소개", "data:image/png;base64,DATA"),
+                        new FoodResponseDto(2L, "치킨텐더 망고샐러드&머스타드 드레싱", "음식소개", "data:image/png;base64,DATA"),
+                        new FoodResponseDto(3L, "포크스튜&구운 레몬치킨 세트", "음식소개", "data:image/png;base64,DATA")
                 ),
                 PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "calorie")),
                 () -> 4
@@ -417,6 +417,7 @@ class FoodApiControllerTest {
                         responseFields(
                                 fieldWithPath("message").type(JsonFieldType.STRING).description("메시지"),
                                 fieldWithPath("data.foodNm").type(JsonFieldType.STRING).description("음식명"),
+                                fieldWithPath("data.img").type(JsonFieldType.STRING).description("음식 이미지"),
                                 fieldWithPath("data.foodDesc").type(JsonFieldType.STRING).description("음식소개"),
                                 fieldWithPath("data.calorie").type(JsonFieldType.NUMBER).description("칼로리"),
                                 fieldWithPath("data.carbs").type(JsonFieldType.NUMBER).description("탄수화물"),
